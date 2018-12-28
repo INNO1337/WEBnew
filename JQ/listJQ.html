@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>JSON LIST JQ</title>
+	<script type="text/javascript" src="/ajax/libs/jquery/1.11.1/jquery.min.js%22"></script>
+	<style type="text/css">
+		li{
+			cursor: pointer;
+		}
+	</style>
+</head>
+<body>
+	<script type="text/javascript">
+
+		/// 5.1
+		const m = [
+			{
+				text: 'Животные',
+				childs: [
+					{
+						text: 'Млекопитающие',
+						childs: [
+							'Коровы',
+							'Ослы',
+							'Собаки',
+							'Тигры'
+						]
+					},
+					{
+						text: 'Рыбы',
+						childs: [
+							{
+								text: 'Аквариумные',
+								childs: [
+									'Гуппи',
+									'Скалярии'
+								]
+							},
+							{
+								text: 'Морские',
+								childs: [
+									'Морская форель'
+								]
+							}
+						]
+					}
+				]
+			},
+			{
+				text: 'Растения',
+				childs: [
+					{
+						text: 'Водоросли',
+						childs: [
+							'Зелёные',
+							'Харофиты'
+						]
+					},
+					{
+						text: 'Семенные растения',
+						childs: [
+							'Хвойные',
+							'Цветковые',
+							'Гинкговидные'
+						]
+					}
+				]
+			}
+		]
+
+		function generateList(childs) {
+			
+			let ul = $('<ul/>')
+
+			for (let child of childs) {
+				let li = $('<li/>')
+				if (child.text !== undefined) 
+					li.append(child.text)
+				if (typeof child !== 'object')
+					li.append(child)
+				else if (child.childs !== undefined) 
+					li.append(generateList(child.childs))
+
+
+				li.on('click', function(e) {
+					e.preventDefault()
+					$(this.firstElementChild).slideToggle()
+					console.log(this.firstChild.data, $(this).find("li").length)
+					return false
+				})
+				ul.append(li)
+			}
+			return ul
+		}
+		$("body").append(generateList(m))
+
+
+	</script>
+</body>
+</html>
