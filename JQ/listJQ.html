@@ -1,101 +1,90 @@
-<!DOCTYPE html>
+<!DOCTYPE HTML>
 <html>
-<head>
-	<meta charset="utf-8">
-	<title>JSON LIST JQ</title>
-	<script type="text/javascript" src="/ajax/libs/jquery/1.11.1/jquery.min.js%22"></script>
-	<style type="text/css">
-		li{
-			cursor: pointer;
-		}
-	</style>
-</head>
-<body>
-	<script type="text/javascript">
-
-		/// 5.1
-		const m = [
-			{
-				text: 'Животные',
-				childs: [
-					{
-						text: 'Млекопитающие',
-						childs: [
-							'Коровы',
-							'Ослы',
-							'Собаки',
-							'Тигры'
-						]
-					},
-					{
-						text: 'Рыбы',
-						childs: [
-							{
-								text: 'Аквариумные',
-								childs: [
-									'Гуппи',
-									'Скалярии'
-								]
-							},
-							{
-								text: 'Морские',
-								childs: [
-									'Морская форель'
-								]
-							}
-						]
-					}
-				]
+	<head>  
+		<meta charset="utf-8">
+		 <script src="http://code.jquery.com/jquery-1.8.3.js"></script>
+		<style type="text/css">
+			#list {
+			}
+			ul > li {
+			}
+			ul > li > ul {
+				display: none;
+			}
+		</style>
+	</head>
+	<body>
+		<script>
+				var m = [
+				{
+			  text: 'Животные',
+			  children: [
+				{
+				  text: 'Млекопитающие',
+				  children: [
+					{ text: 'Коровы' },
+					{ text: 'Ослы' },
+					{ text: 'Собаки' },
+					{ text: 'Тигры' },
+				  ]
+				},
+				{
+				  text: 'Другие',
+				  children: [
+					{ text: 'Змеи' },
+					{ text: 'Птицы' },
+					{ text: 'Ящерицы' },
+				  ]
+				},
+			  ]
 			},
 			{
-				text: 'Растения',
-				childs: [
-					{
-						text: 'Водоросли',
-						childs: [
-							'Зелёные',
-							'Харофиты'
-						]
-					},
-					{
-						text: 'Семенные растения',
-						childs: [
-							'Хвойные',
-							'Цветковые',
-							'Гинкговидные'
-						]
+			  text: 'Рыбы',
+			  children: [
+				{
+				  text: 'Аквариумные',
+				  children: [
+					{ text: 'Гуппи' },
+					{ text: 'Скалярии' },
+				  ]
+				},
+				{
+				  text: 'Морские',
+				  children: [
+					{ text: 'Морская форель' },
+				  ]
+				},
+			  ]
+			},
+		  ];
+			function createList( array){
+				var html='<ul>';
+				$.each( array, function(k, item){
+					var li='<li>';
+					html+=li+item.text;
+					if( item.children){
+						html+=createList(item.children);
 					}
-				]
+					html+='</li>';
+					
+				});
+				 html+='</ul>';
+				return html;
 			}
-		]
-
-		function generateList(childs) {
+			$('body').html( createList( m));
+			$(document).ready(function () {
+				$('ul > li').click(function (event) {
+					$(this).children("ul").slideToggle(500);
+					event.stopPropagation();
+				});
+			});
+			$('li').each(function(){ 
+			 $(this.firstElementChild).slideToggle();
+                    console.log(this.firstChild.data, $(this).find("li").length);
+                    
+                })
+                
 			
-			let ul = $('<ul/>')
-
-			for (let child of childs) {
-				let li = $('<li/>')
-				if (child.text !== undefined) 
-					li.append(child.text)
-				if (typeof child !== 'object')
-					li.append(child)
-				else if (child.childs !== undefined) 
-					li.append(generateList(child.childs))
-
-
-				li.on('click', function(e) {
-					e.preventDefault()
-					$(this.firstElementChild).slideToggle()
-					console.log(this.firstChild.data, $(this).find("li").length)
-					return false
-				})
-				ul.append(li)
-			}
-			return ul
-		}
-		$("body").append(generateList(m))
-
-
-	</script>
+		</script>
 </body>
 </html>
